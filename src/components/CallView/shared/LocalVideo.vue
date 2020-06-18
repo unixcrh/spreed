@@ -21,7 +21,7 @@
 <template>
 	<div id="localVideoContainer"
 		class="videoContainer videoView"
-		:class="{ speaking: localMediaModel.attributes.speaking, 'video-container-grid': isGrid, 'video-container-stripe': isStripe }">
+		:class="containerClass">
 		<video v-show="localMediaModel.attributes.videoEnabled"
 			id="localVideo"
 			ref="video"
@@ -46,6 +46,7 @@
 		</div>
 		<transition name="fade">
 			<LocalMediaControls
+				v-if="!isBig"
 				ref="localMediaControls"
 				:model="localMediaModel"
 				:local-call-participant-model="localCallParticipantModel"
@@ -132,6 +133,15 @@ export default {
 
 		avatarSizeClass() {
 			return 'avatar-' + this.avatarSize + 'px'
+		},
+
+		containerClass() {
+			return {
+				'speaking': this.localMediaModel.attributes.speaking,
+				'video-container-grid': this.isGrid,
+				'video-container-stripe': this.isStripe,
+				'video-container-big': this.isBig,
+			}
 		},
 	},
 
@@ -240,6 +250,12 @@ export default {
 
 .avatar-container {
 	margin: auto;
+}
+
+.video-container-big {
+	position: absolute;
+	height: 100%;
+	width: 100%;
 }
 
 </style>

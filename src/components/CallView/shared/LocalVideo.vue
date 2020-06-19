@@ -21,7 +21,10 @@
 <template>
 	<div id="localVideoContainer"
 		class="videoContainer videoView"
-		:class="containerClass">
+		:class="containerClass"
+		@mouseover="showShadow"
+		@mouseleave="hideShadow"
+		@click="handleClickVideo">
 		<video v-show="localMediaModel.attributes.videoEnabled"
 			id="localVideo"
 			ref="video"
@@ -53,6 +56,7 @@
 				:screen-sharing-button-hidden="isSidebar"
 				@switchScreenToId="$emit('switchScreenToId', $event)" />
 		</transition>
+		<div v-if="mouseover && !isBig" class="hover-shadow" />
 	</div>
 </template>
 
@@ -96,6 +100,10 @@ export default {
 			default: false,
 		},
 		isSidebar: {
+			type: Boolean,
+			default: false,
+		},
+		isSelectable: {
 			type: Boolean,
 			default: false,
 		},

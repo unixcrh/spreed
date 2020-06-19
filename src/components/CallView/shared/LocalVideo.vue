@@ -56,7 +56,7 @@
 				:screen-sharing-button-hidden="isSidebar"
 				@switchScreenToId="$emit('switchScreenToId', $event)" />
 		</transition>
-		<div v-if="mouseover && !isBig" class="hover-shadow" />
+		<div v-if="mouseover && isSelectable" class="hover-shadow" />
 	</div>
 </template>
 
@@ -100,10 +100,6 @@ export default {
 			default: false,
 		},
 		isSidebar: {
-			type: Boolean,
-			default: false,
-		},
-		isSelectable: {
 			type: Boolean,
 			default: false,
 		},
@@ -151,6 +147,18 @@ export default {
 				'video-container-big': this.isBig,
 				'selectable': this.isSelectable,
 			}
+		},
+
+		hasLocalVideo() {
+			return this.localMediaModel.attributes.videoEnabled
+		},
+
+		isSelected() {
+			return this.$store.getters.selectedVideoPeerId === 'local'
+		},
+
+		isSelectable() {
+			return this.hasLocalVideo && this.$store.getters.selectedVideoPeerId !== 'local'
 		},
 	},
 
@@ -241,6 +249,7 @@ export default {
 	display: flex;
 	flex-direction: column;
 }
+
 .selectable {
 	cursor: pointer;
 }
@@ -270,4 +279,13 @@ export default {
 	width: 100%;
 }
 
+.hover-shadow {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	top: 0;
+	left: 0;
+	box-shadow: inset 0 0 0 3px white;
+	cursor: pointer;
+}
 </style>

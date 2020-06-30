@@ -49,8 +49,8 @@
 		</div>
 		<transition name="fade">
 			<LocalMediaControls
-				v-if="!isBig"
 				ref="localMediaControls"
+				:is-big="isBig"
 				:model="localMediaModel"
 				:local-call-participant-model="localCallParticipantModel"
 				:screen-sharing-button-hidden="isSidebar"
@@ -145,7 +145,6 @@ export default {
 				'video-container-grid': this.isGrid,
 				'video-container-stripe': this.isStripe,
 				'video-container-big': this.isBig,
-				'selectable': this.isSelectable,
 			}
 		},
 
@@ -248,10 +247,6 @@ export default {
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
-}
-
-.selectable {
-	cursor: pointer;
 }
 
 .video {

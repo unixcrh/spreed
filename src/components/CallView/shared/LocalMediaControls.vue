@@ -19,66 +19,76 @@
   -->
 
 <template>
-	<div class="nameIndicator">
-		<div id="muteWrapper">
+	<div>
+		<div v-if="!isBig" class="nameIndicator">
+			<div id="muteWrapper">
+				<button
+					id="mute"
+					v-shortkey="['m']"
+					v-tooltip="audioButtonTooltip"
+					:aria-label="audioButtonAriaLabel"
+					:class="audioButtonClass"
+					class="forced-white"
+					@shortkey="toggleAudio"
+					@click="toggleAudio" />
+				<span v-show="model.attributes.audioAvailable"
+					ref="volumeIndicator"
+					class="volume-indicator"
+					:style="{ 'height': currentVolumeIndicatorHeight + 'px' }" />
+			</div>
 			<button
-				id="mute"
-				v-shortkey="['m']"
-				v-tooltip="audioButtonTooltip"
-				:aria-label="audioButtonAriaLabel"
-				:class="audioButtonClass"
+				id="hideVideo"
+				v-shortkey="['v']"
+				v-tooltip="videoButtonTooltip"
+				:aria-label="videoButtonAriaLabel"
+				:class="videoButtonClass"
 				class="forced-white"
-				@shortkey="toggleAudio"
-				@click="toggleAudio" />
-			<span v-show="model.attributes.audioAvailable"
-				ref="volumeIndicator"
-				class="volume-indicator"
-				:style="{ 'height': currentVolumeIndicatorHeight + 'px' }" />
+				@shortkey="toggleVideo"
+				@click="toggleVideo" />
+			<button
+				v-if="!screenSharingButtonHidden"
+				id="screensharing-button"
+				v-tooltip="screenSharingButtonTooltip"
+				:aria-label="screenSharingButtonAriaLabel"
+				:class="screenSharingButtonClass"
+				class="app-navigation-entry-utils-menu-button forced-white"
+				@click="toggleScreenSharingMenu" />
+			<div id="screensharing-menu" :class="{ open: screenSharingMenuOpen }" class="app-navigation-entry-menu">
+				<ul>
+					<li v-if="!model.attributes.localScreen && splitScreenSharingMenu" id="share-screen-entry">
+						<button id="share-screen-button" @click="shareScreen">
+							<span class="icon-screen" />
+							<span>{{ t('spreed', 'Share whole screen') }}</span>
+						</button>
+					</li>
+					<li v-if="!model.attributes.localScreen && splitScreenSharingMenu" id="share-window-entry">
+						<button id="share-window-button" @click="shareWindow">
+							<span class="icon-share-window" />
+							<span>{{ t('spreed', 'Share a single window') }}</span>
+						</button>
+					</li>
+					<li v-if="model.attributes.localScreen" id="show-screen-entry">
+						<button id="show-screen-button" @click="showScreen">
+							<span class="icon-screen" />
+							<span>{{ t('spreed', 'Show your screen') }}</span>
+						</button>
+					</li>
+					<li v-if="model.attributes.localScreen" id="stop-screen-entry">
+						<button id="stop-screen-button" @click="stopScreen">
+							<span class="icon-screen-off" />
+							<span>{{ t('spreed', 'Stop screensharing') }}</span>
+						</button>
+					</li>
+				</ul>
+			</div>
 		</div>
-		<button
-			id="hideVideo"
-			v-shortkey="['v']"
-			v-tooltip="videoButtonTooltip"
-			:aria-label="videoButtonAriaLabel"
-			:class="videoButtonClass"
-			class="forced-white"
-			@shortkey="toggleVideo"
-			@click="toggleVideo" />
-		<button
-			v-if="!screenSharingButtonHidden"
-			id="screensharing-button"
-			v-tooltip="screenSharingButtonTooltip"
-			:aria-label="screenSharingButtonAriaLabel"
-			:class="screenSharingButtonClass"
-			class="app-navigation-entry-utils-menu-button forced-white"
-			@click="toggleScreenSharingMenu" />
-		<div id="screensharing-menu" :class="{ open: screenSharingMenuOpen }" class="app-navigation-entry-menu">
-			<ul>
-				<li v-if="!model.attributes.localScreen && splitScreenSharingMenu" id="share-screen-entry">
-					<button id="share-screen-button" @click="shareScreen">
-						<span class="icon-screen" />
-						<span>{{ t('spreed', 'Share whole screen') }}</span>
-					</button>
-				</li>
-				<li v-if="!model.attributes.localScreen && splitScreenSharingMenu" id="share-window-entry">
-					<button id="share-window-button" @click="shareWindow">
-						<span class="icon-share-window" />
-						<span>{{ t('spreed', 'Share a single window') }}</span>
-					</button>
-				</li>
-				<li v-if="model.attributes.localScreen" id="show-screen-entry">
-					<button id="show-screen-button" @click="showScreen">
-						<span class="icon-screen" />
-						<span>{{ t('spreed', 'Show your screen') }}</span>
-					</button>
-				</li>
-				<li v-if="model.attributes.localScreen" id="stop-screen-entry">
-					<button id="stop-screen-button" @click="stopScreen">
-						<span class="icon-screen-off" />
-						<span>{{ t('spreed', 'Stop screensharing') }}</span>
-					</button>
-				</li>
-			</ul>
+		<div class="bottom-bar">
+			<button
+				v-if="isBig"
+				class="bottom-bar__button"
+				@click="handleStopFollowing">
+				{{ stopFollowingLabel }}
+			</button>
 		</div>
 	</div>
 </template>
@@ -107,6 +117,10 @@ export default {
 			required: true,
 		},
 		screenSharingButtonHidden: {
+			type: Boolean,
+			default: false,
+		},
+		isBig: {
 			type: Boolean,
 			default: false,
 		},
@@ -247,6 +261,10 @@ export default {
 			return (this.model.attributes.localScreen || this.splitScreenSharingMenu) ? t('spreed', 'Screensharing options') : t('spreed', 'Enable screensharing')
 		},
 
+		stopFollowingLabel() {
+			return t('spreed', 'Back')
+		},
+
 	},
 
 	created() {
@@ -383,6 +401,9 @@ export default {
 				}
 			})
 		},
+		handleStopFollowing() {
+			this.$store.dispatch('selectedVideoPeerId', null)
+		},
 	},
 }
 </script>
@@ -481,5 +502,30 @@ export default {
 
 #muteWrapper .icon-audio-off + .volume-indicator {
 	background: linear-gradient(0deg, gray, white 36px);
+}
+
+.bottom-bar {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	padding: 0 20px 12px 24px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 40px;
+	&--big {
+		justify-content: center;
+		height: 48px;
+	}
+	&__button {
+		opacity: 0.8;
+		margin-left: 4px;
+		border: none;
+		&:hover,
+		&:focus {
+			opacity: 1;
+			border: none;
+		}
+	}
 }
 </style>

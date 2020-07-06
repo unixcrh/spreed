@@ -128,6 +128,10 @@ export default {
 
 			return '/' + this.path
 		},
+
+		isTemporary() {
+			return this.id.startsWith('temp')
+		},
 	},
 	mounted() {
 		const img = new Image()

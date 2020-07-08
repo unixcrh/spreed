@@ -37,6 +37,7 @@
 		<span v-if="isLoading"
 			class="preview loading" />
 		<strong>{{ name }}</strong>
+		<v-progress-linear v-if="isTemporaryUpload" color="#033" :value="uploadProgress" />
 	</a>
 </template>
 
@@ -60,7 +61,7 @@ export default {
 		},
 		path: {
 			type: String,
-			required: true,
+			default: '',
 		},
 		link: {
 			type: String,
@@ -78,6 +79,20 @@ export default {
 			type: Number,
 			default: 128,
 		},
+
+		// In case this component is used to display a file that is being uploaded
+		// this parameter is used to access the file upload status in the store
+		uploadId: {
+			type: Number,
+			default: null,
+		},
+		// In case this component is used to display a file that is being uploaded
+		// this parameter is used to access the file upload status in the store
+		index: {
+			type: String,
+			default: '',
+		},
+
 	},
 	data() {
 		return {
@@ -129,10 +144,19 @@ export default {
 			return '/' + this.path
 		},
 
-		isTemporary() {
-			return this.id.startsWith('temp')
+		isTemporaryUpload() {
+			return this.id.startsWith('temp') && this.index && this.uploadId
+		},
+
+		uploadProgress() {
+			if (this.isTemporaryUpload) {
+				return this.$store.getters.uploadProgress(this.uploadId, this.index)
+			} else {
+				return undefined
+			}
 		},
 	},
+
 	mounted() {
 		const img = new Image()
 		img.onerror = () => {

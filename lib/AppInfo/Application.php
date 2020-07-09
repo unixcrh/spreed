@@ -34,6 +34,7 @@ use OCA\Talk\Collaboration\Collaborators\Listener as CollaboratorsListener;
 use OCA\Talk\Collaboration\Resources\ConversationProvider;
 use OCA\Talk\Collaboration\Resources\Listener as ResourceListener;
 use OCA\Talk\Config;
+use OCA\Talk\Dashboard\TalkPanel;
 use OCA\Talk\Events\ChatEvent;
 use OCA\Talk\Events\RoomEvent;
 use OCA\Talk\Files\Listener as FilesListener;
@@ -87,6 +88,8 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(AddFeaturePolicyEvent::class, FeaturePolicyListener::class);
 		$context->registerEventListener(UserDeletedEvent::class, UserDeletedListener::class);
 		$context->registerEventListener(BeforeUserLoggedOutEvent::class, BeforeUserLoggedOutListener::class);
+
+		$context->registerDashboardPanel(TalkPanel::class);
 	}
 
 	public function boot(IBootContext $context): void {

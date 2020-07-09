@@ -305,7 +305,7 @@ export default {
 		},
 
 		isTemporaryUpload() {
-			return this.isTemporary && this.richParameters.file.props.uploadId && this.richParameters.file.props.indes
+			return this.isTemporary && this.messageParameters.file
 		},
 	},
 

@@ -359,7 +359,7 @@ export default {
 		justify-content: space-between;
 		min-width: 100%;
 		&__text {
-			flex: 0 1 auto;
+			flex: 1 1 auto;
 			color: var(--color-text-light);
 			.single-emoji {
 				font-size: 250%;
@@ -394,7 +394,7 @@ export default {
 			display: flex;
 			color: var(--color-text-maxcontrast);
 			font-size: $chat-font-size;
-			flex: 1 0 80px;
+			flex: 0 0 95px;
 			padding: 0 8px 0 8px;
 			&__actions.action-item {
 				position: absolute;
@@ -405,6 +405,9 @@ export default {
 				margin-left: auto;
 			}
 		}
+	}
+	.icon-loading-small {
+		position: unset;
 	}
 }
 

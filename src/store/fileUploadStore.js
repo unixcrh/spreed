@@ -168,6 +168,8 @@ const actions = {
 				const sharePath = '/' + uniquePath
 				// Mark the file as uploaded in the store
 				commit('markFileAsSuccessUpload', { uploadId, index, sharePath })
+				// Delete temporary message
+				dispatch('deleteMessage', temporaryMessage)
 			} catch (exception) {
 				console.debug('Error while uploading file:' + exception)
 				showError(t('spreed', 'Error while uploading file'))

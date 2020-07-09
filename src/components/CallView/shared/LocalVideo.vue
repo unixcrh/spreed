@@ -310,7 +310,7 @@ export default {
 
 			this.qualityWarningInGracePeriodTimeout = window.setTimeout(() => {
 				this.qualityWarningInGracePeriodTimeout = null
-			}, 3000)
+			}, 5000)
 		},
 
 		showQualityWarning: function(showQualityWarning) {

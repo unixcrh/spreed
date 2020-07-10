@@ -37,49 +37,62 @@
 		<span v-if="isLoading"
 			class="preview loading" />
 		<strong>{{ name }}</strong>
-		<v-progress-linear v-if="isTemporaryUpload" color="#033" :value="uploadProgress" />
+		<ProgressBar v-if="isTemporaryUpload" :value="uploadProgress" />
 	</a>
 </template>
 
 <script>
 import { generateUrl, imagePath } from '@nextcloud/router'
+import ProgressBar from '../../../../ProgressBar'
 
 export default {
 	name: 'FilePreview',
+
+	components: {
+		ProgressBar,
+	},
+
 	props: {
+
 		type: {
 			type: String,
 			required: true,
 		},
+
 		id: {
 			type: String,
 			required: true,
 		},
+
 		name: {
 			type: String,
 			required: true,
 		},
+
 		path: {
 			type: String,
 			default: '',
 		},
+
 		link: {
 			type: String,
 			default: '',
 		},
+
 		mimetype: {
 			type: String,
 			default: '',
 		},
+
 		previewAvailable: {
 			type: String,
 			default: 'no',
 		},
+
 		previewSize: {
 			type: Number,
 			default: 128,
 		},
-
 		// In case this component is used to display a file that is being uploaded
 		// this parameter is used to access the file upload status in the store
 		uploadId: {
@@ -205,6 +218,7 @@ export default {
 <style lang="scss" scoped>
 
 .container {
+	width: 100%;
 	/* The file preview can not be a block; otherwise it would fill the whole
 	width of the container and the loading icon would not be centered on the
 	image. */

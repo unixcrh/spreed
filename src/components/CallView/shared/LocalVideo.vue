@@ -66,7 +66,6 @@ import LocalMediaControls from './LocalMediaControls'
 import Hex from 'crypto-js/enc-hex'
 import SHA1 from 'crypto-js/sha1'
 import { showInfo } from '@nextcloud/dialogs'
-import Tooltip from '@nextcloud/vue/dist/Directives/Tooltip'
 import video from '../../../mixins/video.js'
 import VideoBackground from './VideoBackground'
 import { callAnalyzer } from '../../../utils/webrtc/index'
@@ -75,10 +74,6 @@ import { CONNECTION_QUALITY } from '../../../utils/webrtc/analyzers/PeerConnecti
 export default {
 
 	name: 'LocalVideo',
-
-	directives: {
-		tooltip: Tooltip,
-	},
 
 	components: {
 		Avatar,
@@ -220,9 +215,10 @@ export default {
 		},
 
 		// The quality warning tooltip is automatically shown only if the
-		// quality warning has not been shown in the last minute. Otherwise the
-		// tooltip is hidden even if the warning is shown, although the tooltip
-		// can be shown anyway by hovering on the warning.
+		// quality warning (dimmed video) has not been shown in the last minute.
+		// Otherwise the tooltip is hidden even if the warning is shown,
+		// although the tooltip can be shown anyway by hovering on the media
+		// button.
 		showQualityWarningTooltip() {
 			return !this.qualityWarningWasRecentlyShownTimeout
 		},
